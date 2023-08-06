@@ -1,6 +1,11 @@
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 const validateEmail = require("../ultils/validateEmail");
+const {
+    generateAccessToken,
+    generateRefreshToken,
+} = require("../middlewares/jwt");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -49,15 +54,37 @@ const login = asyncHandler(async (req, res) => {
     // Kiểm tra mật khẩu và email của người dùng này có trùng khớp trong hệ thống không?
     const response = await User.findOne({
         email,
-    });
+    }).select("-refreshToken");
+
     if (response) {
         const checkPassword = bcrypt.compareSync(password, response.password);
         if (checkPassword) {
             const { password, role, ...userData } = response.toObject();
+
+            // Tạo token
+            const accessToken = generateAccessToken(response._id, role);
+
+            // Tạo refresh token
+            const refreshToken = generateRefreshToken(response._id);
+
+            // Lưu refresh token vào db
+            await User.findByIdAndUpdate(
+                response._id,
+                { refreshToken },
+                { new: true }
+            );
+
+            // Lưu refresh token vào cookie
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+
             return res.status(200).json({
                 status: response ? true : false,
                 message: "Login successfully! :>",
                 userData,
+                accessToken, // bỏ token vào thông tin khi đăng nhập
             });
         } else {
             throw new Error(
@@ -69,7 +96,78 @@ const login = asyncHandler(async (req, res) => {
     }
 });
 
+const getCurrent = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const user = await User.findById(_id).select(
+        "-refreshToken -role -password"
+    );
+
+    return res.status(200).json({
+        status: user ? true : false,
+        response: user ? user : "User not found! :<",
+    });
+});
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    // Lấy token ra từ cookie
+    const cookie = req.cookies;
+
+    // Kiểm tra token có ko
+    if (!cookie && !cookie.refreshToken)
+        throw new Error("No refresh token in cookie");
+
+    // Kiểm tra token có hợp lệ hoặc còn thời hạn ko
+    jwt.verify(
+        cookie.refreshToken,
+        process.env.JWT_SECRET,
+        async (err, decode) => {
+            if (err) throw new Error("Invalid refresh token or da het han! :<");
+
+            // Kiểm tra token có đúng với token đã lưu trong db ko
+            const response = await User.findOne({
+                _id: decode._id,
+                refreshToken: cookie.refreshToken,
+            });
+
+            // Tạo token mới
+            return res.status(200).json({
+                status: response ? true : false,
+                newAccessToken: response
+                    ? generateAccessToken(response._id, response.role)
+                    : "Refresh token is invalid! :<",
+            });
+        }
+    );
+});
+
+const logout = asyncHandler(async (req, res) => {
+    const cookie = req.cookies;
+    if (!cookie || !cookie.refreshToken)
+        throw new Error("No refresh token in cookie");
+
+    // Xóa refresh token ở db
+    await User.findOneAndUpdate(
+        { refreshToken: cookie.refreshToken },
+        { refreshToken: "" },
+        { new: true }
+    );
+
+    // Xóa refresh token ở cookie
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+    });
+
+    return res.status(200).json({
+        status: true,
+        message: "Logout successfully",
+    });
+});
+
 module.exports = {
     register,
     login,
+    getCurrent,
+    refreshAccessToken,
+    logout,
 };
