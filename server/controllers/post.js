@@ -16,10 +16,65 @@ const createPost = asyncHandler(async (req, res) => {
 });
 
 const getPosts = asyncHandler(async (req, res) => {
-    const response = await Post.find();
+    const queries = { ...req.query };
+
+    // Tách các giá trị đặc biệt
+    const excludeFields = ["limit", "sort", "page", "fields"];
+    excludeFields.forEach((element) => delete queries[element]);
+
+    // $gt: >
+    // $gte: >=
+    // $lt: <
+    // $lte: <=
+
+    // Format lại các operators cho đúng cú pháp của mongodb
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(
+        /\b(gt|gte|lt|lte)\b/g,
+        (matchedElement) => `$${matchedElement}`
+    );
+    const formatedQueries = JSON.parse(queryString);
+
+    // Filtering (by title)
+    if (queries?.title)
+        formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
+    let queryCommand = Post.find(formatedQueries); // pending
+
+    // Sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(",").join(" ");
+        queryCommand = queryCommand.sort(sortBy);
+    } else {
+        queryCommand = queryCommand.sort("createdAt");
+    }
+
+    // Fields limiting
+    if (req.query.fields) {
+        const fields = req.query.fields.split(",").join(" ");
+        queryCommand = queryCommand.select(fields);
+    } else {
+        queryCommand = queryCommand.select("-__v");
+    }
+
+    // Pagination
+    // limit: số bài đăng muốn lấy
+    // skip: bỏ qua
+    // page: trang hiện tại
+
+    // Ví dụ: trang 10, mỗi trang 2 bài
+    // page = 10, limit 2 => skip => 18 => trang 10 sẽ có 19 và 20
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+    queryCommand.skip(skip).limit(limit);
+
+    //EXECUTE QUERY
+    const posts = await queryCommand;
     return res.status(200).json({
-        status: response ? true : false,
-        posts: response,
+        status: posts ? true : false,
+        counts: posts.length,
+        posts: posts ? posts : "Can not get all posts",
     });
 });
 
