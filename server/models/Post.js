@@ -24,6 +24,8 @@ var postSchema = new mongoose.Schema(
         },
         image: {
             type: String,
+            default:
+                "https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg",
         },
     },
     {

@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { uploadCloudUser } = require("../config/cloudinary.config");
 const controllers = require("../controllers/user");
 const {
     verifyAccessToken,
@@ -17,12 +18,22 @@ router.post("/refreshToken", controllers.refreshAccessToken);
 router.get("/logout", controllers.logout);
 // [GET] - Get all users
 router.get("/", [verifyAccessToken, verifyAdmin], controllers.getUsers);
+// [UPDATE] - Update user
+router.put("/current", [verifyAccessToken], controllers.updateUser);
+router.put(
+    "/upload/:uid",
+    [verifyAccessToken],
+    uploadCloudUser.single("avatar"),
+    controllers.uploadAvatarUser
+);
 // [GET] - Get user by id
 router.get("/:uid", [verifyAccessToken, verifyAdmin], controllers.getUserById);
 // [DELETE] - Delete user
-router.delete("/", [verifyAccessToken, verifyAdmin], controllers.deleteUser);
-// [UPDATE] - Update user
-router.put("/current", [verifyAccessToken], controllers.updateUser);
+router.delete(
+    "/:uid",
+    [verifyAccessToken, verifyAdmin],
+    controllers.deleteUser
+);
 // [UPDATE] - Update user by admin
 router.put(
     "/:uid",

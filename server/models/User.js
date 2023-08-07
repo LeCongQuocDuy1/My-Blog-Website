@@ -20,6 +20,11 @@ var userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        avatar: {
+            type: String,
+            default:
+                "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png",
+        },
         role: {
             type: String,
             default: "user",

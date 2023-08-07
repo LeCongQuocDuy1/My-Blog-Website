@@ -7,7 +7,6 @@ const createPost = asyncHandler(async (req, res) => {
 
     // Kiểm tra có tiêu đề ko và tạo slug
     if (req.body && req.body.title) req.body.slug = slugify(req.body.title);
-
     const newPost = await Post.create(req.body);
     return res.status(200).json({
         status: newPost ? true : false,
@@ -38,7 +37,7 @@ const getPosts = asyncHandler(async (req, res) => {
     // Filtering (by title)
     if (queries?.title)
         formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
-    let queryCommand = Post.find(formatedQueries); // pending
+    let queryCommand = Post.find(formatedQueries).populate("category"); // pending
 
     // Sorting
     if (req.query.sort) {
@@ -81,7 +80,7 @@ const getPosts = asyncHandler(async (req, res) => {
 const getPostById = asyncHandler(async (req, res) => {
     const { pid } = req.params;
     if (!pid) throw new Error("Missing input id");
-    const response = await Post.findById(pid);
+    const response = await Post.findById(pid).populate("category");
     return res.status(200).json({
         status: response ? true : false,
         post: response,
@@ -119,10 +118,31 @@ const updatePost = asyncHandler(async (req, res) => {
     });
 });
 
+const uploadImagePost = asyncHandler(async (req, res) => {
+    const { pid } = req.params;
+    if (!req.file) throw new Error("Missing input image");
+    const response = await Post.findByIdAndUpdate(
+        pid,
+        {
+            image: req.file.path,
+        },
+        {
+            new: true,
+        }
+    );
+    return res.status(200).json({
+        status: response ? true : false,
+        updatedProduct: response
+            ? response
+            : "Update image post failed! Please try again :<",
+    });
+});
+
 module.exports = {
     createPost,
     getPosts,
     getPostById,
     deletePost,
     updatePost,
+    uploadImagePost,
 };

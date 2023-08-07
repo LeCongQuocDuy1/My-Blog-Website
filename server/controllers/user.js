@@ -187,9 +187,9 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-    const { _id } = req.query;
-    if (!_id) throw new Error("Missing input id");
-    const response = await User.findByIdAndDelete(_id);
+    const { uid } = req.params;
+    if (!uid) throw new Error("Missing input id");
+    const response = await User.findByIdAndDelete(uid);
     return res.status(200).json({
         status: response ? true : false,
         response: response
@@ -231,6 +231,26 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     });
 });
 
+const uploadAvatarUser = asyncHandler(async (req, res) => {
+    const { uid } = req.params;
+    if (!req.file) throw new Error("Missing input image");
+    const response = await User.findByIdAndUpdate(
+        uid,
+        {
+            avatar: req.file.path,
+        },
+        {
+            new: true,
+        }
+    );
+    return res.status(200).json({
+        status: response ? true : false,
+        updatedUser: response
+            ? response
+            : "Update avatar user failed! Please try again :<",
+    });
+});
+
 module.exports = {
     register,
     login,
@@ -242,4 +262,5 @@ module.exports = {
     deleteUser,
     updateUser,
     updateUserByAdmin,
+    uploadAvatarUser,
 };
