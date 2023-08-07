@@ -59,23 +59,24 @@ const login = asyncHandler(async (req, res) => {
     if (response) {
         const checkPassword = bcrypt.compareSync(password, response.password);
         if (checkPassword) {
-            const { password, role, ...userData } = response.toObject();
+            const { password, role, refreshToken, ...userData } =
+                response.toObject();
 
             // Tạo token
             const accessToken = generateAccessToken(response._id, role);
 
             // Tạo refresh token
-            const refreshToken = generateRefreshToken(response._id);
+            const newRefreshToken = generateRefreshToken(response._id);
 
             // Lưu refresh token vào db
             await User.findByIdAndUpdate(
                 response._id,
-                { refreshToken },
+                { refreshToken: newRefreshToken },
                 { new: true }
             );
 
             // Lưu refresh token vào cookie
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
@@ -164,10 +165,81 @@ const logout = asyncHandler(async (req, res) => {
     });
 });
 
+const getUsers = asyncHandler(async (req, res) => {
+    const response = await User.find().select("-refreshToken -role -password");
+    return res.status(200).json({
+        status: response ? true : false,
+        users: response,
+    });
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+    const { uid } = req.params;
+    if (!uid) throw new Error("Missing input!");
+    const user = await User.findById(uid).select(
+        "-refreshToken -role -password"
+    );
+
+    return res.status(200).json({
+        status: user ? true : false,
+        response: user ? user : "User not found! :<",
+    });
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+    const { _id } = req.query;
+    if (!_id) throw new Error("Missing input id");
+    const response = await User.findByIdAndDelete(_id);
+    return res.status(200).json({
+        status: response ? true : false,
+        response: response
+            ? "User deleted successfully! :>"
+            : "User is not found! Please try again :<",
+    });
+});
+
+// Update role of user
+const updateUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    if (!_id || Object.keys(req.body).length === 0)
+        throw new Error("Missing input!");
+    const response = await User.findByIdAndUpdate(_id, req.body, {
+        new: true,
+    }).select("-refreshToken -role -password");
+
+    return res.status(200).json({
+        status: response ? true : false,
+        response: response
+            ? response
+            : "Update user failed! Please try again :<",
+    });
+});
+
+// Update role of admin
+const updateUserByAdmin = asyncHandler(async (req, res) => {
+    const { uid } = req.params;
+    if (Object.keys(req.body).length === 0) throw new Error("Missing input!");
+    const response = await User.findByIdAndUpdate(uid, req.body, {
+        new: true,
+    }).select("-refreshToken -role -password");
+
+    return res.status(200).json({
+        status: response ? true : false,
+        response: response
+            ? response
+            : "Update user failed! Please try again :<",
+    });
+});
+
 module.exports = {
     register,
     login,
     getCurrent,
     refreshAccessToken,
     logout,
+    getUsers,
+    getUserById,
+    deleteUser,
+    updateUser,
+    updateUserByAdmin,
 };
