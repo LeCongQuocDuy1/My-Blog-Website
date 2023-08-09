@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PostItem2 from "../../components/PostItem2";
 import PostItem from "../../components/PostItem";
 import TitleSection from "../../components/TitleSection";
 import CategoryItem from "../../components/CategoryItem";
 
 const Home = () => {
+    const [data, setData] = useState(null);
+
     return (
         <div className="py-[170px]">
             <div className="flex items-center justify-center mt-[50px] mb-[100px] flex-col w-full">

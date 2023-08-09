@@ -11,6 +11,7 @@ export default {
             },
             colors: {
                 main: "#3398d4",
+                error: "#e60023",
             },
         },
     },

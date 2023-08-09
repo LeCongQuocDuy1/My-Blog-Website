@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import paths from "../ultils/paths";
 
 const Header = () => {
     return (
@@ -8,12 +10,18 @@ const Header = () => {
                     My Blog
                 </div>
                 <div className="flex items-center gap-[12px]">
-                    <div className="py-[8px] px-[16px] rounded-[26px] cursor-pointer text-[15px] font-[600] border-[1px] border-[#000] bg-white text-black">
+                    <Link
+                        to={"/"}
+                        className="py-[8px] px-[16px] rounded-[26px] cursor-pointer text-[15px] font-[600] border-[1px] border-[#000] bg-white text-black"
+                    >
                         Đăng ký
-                    </div>
-                    <div className="py-[8px] px-[16px] rounded-[26px] cursor-pointer text-[15px] font-[600] bg-main text-white">
+                    </Link>
+                    <Link
+                        to={paths.LOGIN}
+                        className="py-[8px] px-[16px] rounded-[26px] cursor-pointer text-[15px] font-[600] bg-main text-white"
+                    >
                         Đăng nhập
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

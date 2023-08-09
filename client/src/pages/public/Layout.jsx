@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-const Public = () => {
+const Layout = () => {
     return (
         <div>
             <Header />
@@ -13,4 +13,4 @@ const Public = () => {
     );
 };
 
-export default Public;
+export default Layout;
