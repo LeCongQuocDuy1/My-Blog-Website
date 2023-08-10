@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { apiRegister, apiLogin } from "../../apis/user";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import paths from "../../ultils/paths";
+import { login } from "../../store/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
+    const [isRegister, setIsRegister] = useState(false);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const loginSchema = yup.object().shape({
         email: yup
             .string()
@@ -17,7 +27,7 @@ const Login = () => {
     });
 
     const registerSchema = yup.object().shape({
-        fullName: yup.string().required("Tên của bạn không được để trống!"),
+        firstName: yup.string().required("Tên của bạn không được để trống!"),
         lastName: yup.string().required("Họ của bạn không được để trống!"),
         email: yup
             .string()
@@ -54,20 +64,38 @@ const Login = () => {
         resolver: yupResolver(registerSchema),
     });
 
-    const handleLogin = (data) => {
+    const handleLogin = async (data) => {
         // Handle login logic here with the submitted data
-        console.log("Login form submitted:", data);
+        const response = await apiLogin(data);
+        console.log(response);
+        if (!response.status) {
+            Swal.fire("Thất bại! :<", response?.message, "error");
+        } else {
+            // Swal.fire("Chúc mừng! :>", response?.message, "success");
+            dispatch(
+                login({
+                    isLoggedIn: true,
+                    token: response.accessToken,
+                    userData: response.userData,
+                })
+            );
+            navigate(`/${paths.HOME}`);
+        }
+
         resetLoginForm(); // Reset login form values
     };
 
-    const handleRegister = (data) => {
+    const handleRegister = async (data) => {
         // Handle register logic here with the submitted data
-        console.log("Register form submitted:", data);
+        const response = await apiRegister(data);
+        if (!response.status) {
+            Swal.fire("Thất bại! :<", response?.message, "error");
+        } else {
+            Swal.fire("Chúc mừng! :>", response?.message, "success");
+        }
+
         resetRegisterForm(); // Reset register form values
     };
-
-    const navigate = useNavigate();
-    const [isRegister, setIsRegister] = useState(false);
 
     return (
         <div className="flex flex-col items-center justify-center h-screen">
@@ -83,14 +111,14 @@ const Login = () => {
                     />
                     <input
                         type="text"
-                        name="fullName"
-                        {...registerRegister("fullName")}
+                        name="firstName"
+                        {...registerRegister("firstName")}
                         placeholder="Tên của bạn"
                         className="outline-none border-[1px] w-full border-[#d3d3d3] py-[8px] px-[10px] text-[16px] text-[#9999a6] mb-[10px]"
                     />
-                    {registerErrors.fullName && (
+                    {registerErrors.firstName && (
                         <p className="text-error mb-[20px] text-[14px]">
-                            {registerErrors.fullName.message}
+                            {registerErrors.firstName.message}
                         </p>
                     )}
 
@@ -158,6 +186,7 @@ const Login = () => {
                             <span
                                 onClick={() => {
                                     setIsRegister(!isRegister);
+                                    resetRegisterForm();
                                 }}
                                 className="text-main font-[600] ml-[5px] cursor-pointer"
                             >
@@ -213,6 +242,7 @@ const Login = () => {
                             Không có tài khoản?
                             <span
                                 onClick={() => {
+                                    resetLoginForm();
                                     setIsRegister(!isRegister);
                                 }}
                                 className="text-main font-[600] ml-[5px] cursor-pointer"

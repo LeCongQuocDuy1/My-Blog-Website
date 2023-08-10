@@ -7,7 +7,7 @@ const {
 } = require("../middlewares/verifyToken");
 
 router.post("/", [verifyAccessToken], controllers.createPost);
-router.get("/", [verifyAccessToken], controllers.getPosts);
+router.get("/", controllers.getPosts);
 
 router.put(
     "/upload/:pid",
@@ -22,6 +22,6 @@ router.delete(
     controllers.deletePost
 );
 
-router.get("/:pid", [verifyAccessToken], controllers.getPostById);
+router.get("/:pid", controllers.getPostById);
 
 module.exports = router;

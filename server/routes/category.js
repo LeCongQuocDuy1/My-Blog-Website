@@ -6,8 +6,8 @@ const {
 } = require("../middlewares/verifyToken");
 
 router.post("/", [verifyAccessToken, verifyAdmin], controllers.createCategory);
-router.get("/", [verifyAccessToken], controllers.getCategories);
-router.get("/:cid", [verifyAccessToken], controllers.getCategoryById);
+router.get("/", controllers.getCategories);
+router.get("/:cid", controllers.getCategoryById);
 router.delete(
     "/:cid",
     [verifyAccessToken, verifyAdmin],

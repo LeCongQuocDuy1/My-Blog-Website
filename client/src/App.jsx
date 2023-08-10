@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Layout, Home, Login } from "./pages/public";
 import paths from "./ultils/paths";
+import { getCategories } from "./store/app/asyncAction";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getCategories());
+    }, []);
+
     return (
         <div className="">
             <Routes>

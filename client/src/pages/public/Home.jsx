@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PostItem2 from "../../components/PostItem2";
 import PostItem from "../../components/PostItem";
 import TitleSection from "../../components/TitleSection";
 import CategoryItem from "../../components/CategoryItem";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-    const [data, setData] = useState(null);
+    const { categories } = useSelector((state) => state.app);
 
     return (
         <div className="py-[170px]">
@@ -41,14 +42,12 @@ const Home = () => {
                     <div className="">
                         <TitleSection title="DANH MỤC" />
                         <div className="flex items-center flex-wrap">
-                            <CategoryItem text="Quan điểm - Tranh luận" />
-                            <CategoryItem text="Khoa học - Công nghệ" />
-                            <CategoryItem text="Thể thao" />
-                            <CategoryItem text="Du lịch" />
-                            <CategoryItem text="Quan điểm - Tranh luận" />
-                            <CategoryItem text="Khoa học - Công nghệ" />
-                            <CategoryItem text="Thể thao" />
-                            <CategoryItem text="Du lịch" />
+                            {categories &&
+                                categories?.map((cate) => (
+                                    <div key={cate._id}>
+                                        <CategoryItem category={cate} />
+                                    </div>
+                                ))}
                         </div>
                         <div className="mt-[20px] h-screen">
                             <img
