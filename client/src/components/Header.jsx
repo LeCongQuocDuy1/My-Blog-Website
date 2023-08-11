@@ -22,7 +22,7 @@ const Header = () => {
     }, [dispatch, isLoggedIn]);
 
     return (
-        <div className="h-[70px] bg-white shadow-lg fixed top-0 right-0 left-0 p-main">
+        <div className="h-[70px] bg-white shadow-lg fixed top-0 right-0 left-0 p-main z-20">
             <div className="flex justify-between w-full items-center">
                 <div className="text-[26px] text-main font-bold leading-[70px]">
                     My Blog

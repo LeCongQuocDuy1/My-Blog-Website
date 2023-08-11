@@ -3,12 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import { Layout, Home, Login } from "./pages/public";
 import paths from "./ultils/paths";
 import { getCategories } from "./store/app/asyncAction";
+import { getPosts } from "./store/post/asyncAction";
 import { useDispatch } from "react-redux";
 
 const App = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(getPosts());
         dispatch(getCategories());
     }, []);
 

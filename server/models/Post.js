@@ -18,14 +18,22 @@ var postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        category: {
-            type: mongoose.Types.ObjectId,
-            ref: "Category",
+        content: {
+            type: String,
+            required: true,
         },
         image: {
             type: String,
             default:
                 "https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg",
+        },
+        category: {
+            type: mongoose.Types.ObjectId,
+            ref: "Category",
+        },
+        user: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
         },
     },
     {

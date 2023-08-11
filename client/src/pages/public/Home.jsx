@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import PostItem2 from "../../components/PostItem2";
-import PostItem from "../../components/PostItem";
 import TitleSection from "../../components/TitleSection";
 import CategoryItem from "../../components/CategoryItem";
 import { useSelector } from "react-redux";
+import SlideImage from "../../components/SlideImage";
+import Paginations from "../../components/Paginations";
 
 const Home = () => {
     const { categories } = useSelector((state) => state.app);
+    const { posts } = useSelector((state) => state.post);
+    const [postsLimit, setPostsLimit] = useState(null);
+
+    console.log(postsLimit);
 
     return (
         <div className="py-[170px]">
@@ -21,23 +26,22 @@ const Home = () => {
             </div>
             <div className="bg-[#f5f7fa] py-[30px] p-main">
                 <TitleSection title="NỔI BẬT TRONG THÁNG" />
-                <div className="grid grid-cols-4 gap-[20px]">
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                </div>
+                <SlideImage />
             </div>
             <div className="bg-[#fff] py-[30px] p-main">
                 <TitleSection title="PHỔ BIẾN HÀNG TUẦN" />
                 <div className="grid grid-cols-3 gap-[40px] w-full">
                     <div className="col-span-2">
-                        <PostItem2 />
-                        <PostItem2 />
-                        <PostItem2 />
-                        <PostItem2 />
-                        <PostItem2 />
-                        <PostItem2 />
+                        {postsLimit &&
+                            postsLimit?.map((post) => (
+                                <React.Fragment key={post._id}>
+                                    <PostItem2 post={post} />
+                                </React.Fragment>
+                            ))}
+                        <Paginations
+                            posts={posts}
+                            setPostsLimit={setPostsLimit}
+                        />
                     </div>
                     <div className="">
                         <TitleSection title="DANH MỤC" />

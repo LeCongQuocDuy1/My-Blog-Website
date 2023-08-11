@@ -37,7 +37,9 @@ const getPosts = asyncHandler(async (req, res) => {
     // Filtering (by title)
     if (queries?.title)
         formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
-    let queryCommand = Post.find(formatedQueries).populate("category"); // pending
+    let queryCommand = Post.find(formatedQueries)
+        .populate("category")
+        .populate("user"); // pending
 
     // Sorting
     if (req.query.sort) {
