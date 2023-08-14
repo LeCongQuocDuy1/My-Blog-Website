@@ -8,6 +8,7 @@ export const userSlice = createSlice({
         isLoading: false,
         current: null,
         token: null,
+        message: "",
     },
     reducers: {
         // Reducer login
@@ -28,10 +29,13 @@ export const userSlice = createSlice({
         builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
             state.isLoading = false;
             state.current = action.payload;
+            state.isLoggedIn = true;
         });
         builder.addCase(actions.getCurrent.rejected, (state, action) => {
             state.isLoading = false;
             state.current = null;
+            state.isLoggedIn = false;
+            state.token = null;
         });
     },
 });

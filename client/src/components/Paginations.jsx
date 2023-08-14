@@ -17,6 +17,7 @@ const Paginations = ({ posts, setPostsLimit }) => {
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+        window.scrollTo(0, 700);
         // Thực hiện các thao tác khi trang thay đổi, ví dụ: gọi API để lấy dữ liệu trang mới
     };
 

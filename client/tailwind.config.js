@@ -8,11 +8,15 @@ export default {
             },
             backgroundColor: {
                 main: "#3398d4",
+                overlay: "rgba(0, 0, 0, 0.3)",
             },
             colors: {
                 main: "#3398d4",
                 error: "#e60023",
             },
+        },
+        fontFamily: {
+            content: ["Noto Serif", "Regular", "Times New Roman"],
         },
     },
     plugins: [],

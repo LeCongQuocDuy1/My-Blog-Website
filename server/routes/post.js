@@ -23,5 +23,6 @@ router.delete(
 );
 
 router.get("/:pid", controllers.getPostById);
+router.get("/:cid", controllers.getPostByCategory);
 
 module.exports = router;

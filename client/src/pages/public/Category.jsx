@@ -3,33 +3,52 @@ import PostItem2 from "../../components/PostItem2";
 import TitleSection from "../../components/TitleSection";
 import CategoryItem from "../../components/CategoryItem";
 import { useSelector } from "react-redux";
-import SlideImage from "../../components/SlideImage";
 import Paginations from "../../components/Paginations";
+import { useParams } from "react-router-dom";
+import { apiGetCategoryById, apiGetPostByCategory } from "../../apis";
 
-const Home = () => {
+const Category = () => {
     const { categories } = useSelector((state) => state.app);
     const { posts, isLoading } = useSelector((state) => state.post);
     const [postsLimit, setPostsLimit] = useState(null);
-    const { current } = useSelector((state) => state.user);
+    const [category, setCategory] = useState(null);
+    const { cid } = useParams();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+        const getPostByCategory = async (cid) => {
+            const response = await apiGetCategoryById(cid);
+            if (response.status) setCategory(response.response);
+        };
+
+        getPostByCategory(cid);
+    }, [cid]);
+
+    useEffect(() => {
+        const getPostByCategory = async (cid) => {
+            const response = await apiGetPostByCategory(cid);
+            // if (response.status) setCategory(response.response);
+            console.log(response);
+        };
+
+        getPostByCategory(cid);
+    }, [cid]);
 
     return (
-        <div className="py-[170px]">
-            <div className="flex items-center justify-center mt-[50px] mb-[100px] flex-col w-full">
-                <div className="text-[60px] font-bold text-inherit">
-                    MyBlog Website
+        <div className="pt-[70px] pb-[170px]">
+            <div
+                className="flex items-center justify-center h-[450px] mb-[100px] flex-col w-full relative"
+                style={{
+                    backgroundImage:
+                        "url(https://spiderum.com/assets/images/categories/business-min.jpg)",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            >
+                <div className="text-[60px] font-bold text-[#fff] z-10">
+                    {category?.title}
                 </div>
-                <div className="text-[20px] font-bold text-inherit">
-                    MyBlog chỉ là một website tạm bợ, do một thằng sinh viên tự
-                    kỉ xây dựng lên nhằm để bỏ vào CV cá nhân.
-                </div>
-            </div>
-            <div className="bg-[#f5f7fa] py-[30px] p-main">
-                <TitleSection title="NỔI BẬT TRONG THÁNG" />
-                <SlideImage />
+                <div className="absolute w-full h-full bg-overlay"></div>
             </div>
             <div className="bg-[#fff] py-[30px] p-main">
                 <TitleSection title="PHỔ BIẾN HÀNG TUẦN" />
@@ -61,7 +80,7 @@ const Home = () => {
                         </div>
                         <div className="mt-[20px] h-screen">
                             <img
-                                src="https://aboutus.spiderum.com/assets/contact.a0702a39_1gtEbq.avif"
+                                src="https://images.spiderum.com/sp-images/4e703120344411ee864e9996a2d9225a.png"
                                 className="w-full h-full object-cover"
                                 alt=""
                             />
@@ -73,4 +92,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Category;

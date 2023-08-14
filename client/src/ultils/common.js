@@ -8,6 +8,14 @@ export const createSlug = (string) =>
         .split(" ")
         .join("-");
 
+export const reverseSlug = (slug) =>
+    slug
+        .split("-")
+        .map((word) =>
+            word.replace(/^\w/, (c) => c.toUpperCase()).replace(/_/g, " ")
+        )
+        .join(" ");
+
 export const formatDateTimeAgo = (datetime) => {
     const now = moment(); // lấy thời điểm hiện tại
     const pastDatetime = moment(datetime); // format ngày tháng được truyền vào

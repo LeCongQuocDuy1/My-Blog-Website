@@ -34,12 +34,12 @@ const getPosts = asyncHandler(async (req, res) => {
     );
     const formatedQueries = JSON.parse(queryString);
 
-    // Filtering (by title)
+    // // Filtering (by title)
     if (queries?.title)
         formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
     let queryCommand = Post.find(formatedQueries)
         .populate("category")
-        .populate("user"); // pending
+        .populate("user");
 
     // Sorting
     if (req.query.sort) {
@@ -82,10 +82,22 @@ const getPosts = asyncHandler(async (req, res) => {
 const getPostById = asyncHandler(async (req, res) => {
     const { pid } = req.params;
     if (!pid) throw new Error("Missing input id");
-    const response = await Post.findById(pid).populate("category");
+    const response = await Post.findById(pid)
+        .populate("category")
+        .populate("user");
     return res.status(200).json({
         status: response ? true : false,
         post: response,
+    });
+});
+
+const getPostByCategory = asyncHandler(async (req, res) => {
+    const { cid } = req.params;
+    if (!cid) throw new Error("Missing input id");
+    const response = await Post.find().populate("category");
+    return res.status(200).json({
+        status: response ? true : false,
+        posts: response,
     });
 });
 
@@ -144,6 +156,7 @@ module.exports = {
     createPost,
     getPosts,
     getPostById,
+    getPostByCategory,
     deletePost,
     updatePost,
     uploadImagePost,

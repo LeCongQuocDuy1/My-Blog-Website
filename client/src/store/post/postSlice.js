@@ -7,7 +7,11 @@ export const postSlice = createSlice({
         posts: null,
         isLoading: false,
     },
-    reducers: {},
+    reducers: {
+        setLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(actions.getPosts.pending, (state, action) => {
             state.isLoading = true;
@@ -24,6 +28,6 @@ export const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {} = postSlice.actions;
+export const { setLoading } = postSlice.actions;
 
 export default postSlice.reducer;

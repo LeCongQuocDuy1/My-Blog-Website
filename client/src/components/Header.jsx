@@ -24,12 +24,24 @@ const Header = () => {
     return (
         <div className="h-[70px] bg-white shadow-lg fixed top-0 right-0 left-0 p-main z-20">
             <div className="flex justify-between w-full items-center">
-                <div className="text-[26px] text-main font-bold leading-[70px]">
+                <Link
+                    to={`/${paths.HOME}`}
+                    className="text-[26px] text-main font-bold leading-[70px]"
+                >
                     My Blog
-                </div>
+                </Link>
                 <div className="flex items-center gap-[12px]">
-                    {isLoggedIn ? (
-                        <div className="flex items-center">
+                    {isLoggedIn && current ? (
+                        <Link
+                            to={
+                                current?.role === "user"
+                                    ? `/${paths.MEMBER}/${paths.PROFILE}`
+                                    : current?.role === "admin"
+                                    ? `/${paths.ADMIN}/${paths.DASHBOARD}`
+                                    : `/${paths.LOGIN}`
+                            }
+                            className="flex items-center"
+                        >
                             <img
                                 src={current?.avatar}
                                 alt="Avatar"
@@ -43,11 +55,11 @@ const Header = () => {
                                 Đăng xuất
                                 <MdLogout size={20} />
                             </button>
-                        </div>
+                        </Link>
                     ) : (
                         <div className="">
                             <Link
-                                to={paths.LOGIN}
+                                to={`/${paths.LOGIN}`}
                                 className="py-[8px] px-[16px] rounded-[26px] cursor-pointer text-[15px] font-[600] bg-main text-white"
                             >
                                 Đăng nhập

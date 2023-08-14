@@ -4,6 +4,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PostItem from "./PostItem";
 import { apiGetPosts } from "../apis/post";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../store/post/postSlice";
 
 const settings = {
     dots: false,
@@ -43,17 +45,27 @@ const settings = {
 
 const SlideImage = () => {
     const [postNewests, setPostNewests] = useState(null);
+    const { isLoading } = useSelector((state) => state.post);
+    const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(setLoading(true));
         const fetchPostsNewest = async (params) => {
             const response = await apiGetPosts(params);
-            if (response.status) setPostNewests(response.posts);
+            if (response.status) {
+                setPostNewests(response.posts);
+            }
         };
 
         fetchPostsNewest({
             sort: "-createdAt",
             limit: 10,
         });
+
+        setTimeout(() => {
+            // Mô phỏng việc tải dữ liệu trong 3 giây
+            dispatch(setLoading(false));
+        }, 3000);
     }, []);
 
     return (
@@ -61,7 +73,7 @@ const SlideImage = () => {
             <Slider {...settings}>
                 {postNewests?.map((item) => (
                     <React.Fragment key={item._id}>
-                        <PostItem post={item} />
+                        <PostItem post={item} loading={isLoading} />
                     </React.Fragment>
                 ))}
             </Slider>

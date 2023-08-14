@@ -99,9 +99,7 @@ const login = asyncHandler(async (req, res) => {
 
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const user = await User.findById(_id).select(
-        "-refreshToken -role -password"
-    );
+    const user = await User.findById(_id).select("-refreshToken -password");
 
     return res.status(200).json({
         status: user ? true : false,
