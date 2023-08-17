@@ -41,3 +41,15 @@ const { AiOutlineDashboard, BiNews, BiSolidCategory, FaUsers } = icons;
 //         icon: <FaUsers />,
 //     },
 // ];
+
+export const roles = [
+    {
+        code: 0,
+        value: "admin",
+    },
+    {
+        code: 1,
+        value: "user",
+    },
+]
+

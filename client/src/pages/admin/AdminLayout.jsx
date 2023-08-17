@@ -12,10 +12,10 @@ const AdminLayout = () => {
 
     return (
         <div className="grid grid-cols-5">
-            <div className=" h-screen w-full">
+            <div className="h-screen w-full relative">
                 <AdminSidebar />
             </div>
-            <div className="col-span-4 bg-[#F7E987] h-screen w-full">
+            <div className="col-span-4 bg-[#d3d3d38d]">
                 <Outlet />
             </div>
         </div>

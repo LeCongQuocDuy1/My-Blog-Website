@@ -7,7 +7,9 @@ import { getPosts } from "./store/post/asyncAction";
 import { useDispatch } from "react-redux";
 import {
     AdminLayout,
+    CreateCategory,
     CreatePost,
+    CreateUser,
     Dashboard,
     ManageCategory,
     ManagePost,
@@ -44,6 +46,11 @@ const App = () => {
                     />
                     <Route path={paths.MANAGE_USER} element={<ManageUser />} />
                     <Route path={paths.CREATE_POST} element={<CreatePost />} />
+                    <Route
+                        path={paths.CREATE_CATEGORY}
+                        element={<CreateCategory />}
+                    />
+                    <Route path={paths.CREATE_USER} element={<CreateUser />} />
                 </Route>
 
                 <Route path={paths.MEMBER} element={<MemberLayout />}>

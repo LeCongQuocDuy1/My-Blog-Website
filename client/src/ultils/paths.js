@@ -13,6 +13,8 @@ const paths = {
     MANAGE_CATEGORY: "manage-category",
     MANAGE_USER: "manage-user",
     CREATE_POST: "create-post",
+    CREATE_CATEGORY: "create-category",
+    CREATE_USER: "create-user",
 
     // MEMBER
     MEMBER: "member",

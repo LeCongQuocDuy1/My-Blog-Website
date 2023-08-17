@@ -164,19 +164,83 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 const getUsers = asyncHandler(async (req, res) => {
-    const response = await User.find().select("-refreshToken -role -password");
+    // const response = await User.find().select("-refreshToken -role -password");
+    // return res.status(200).json({
+    //     status: response ? true : false,
+    //     users: response,
+    // });
+
+    const queries = { ...req.query };
+
+    // Tách các giá trị đặc biệt
+    const excludeFields = ["limit", "sort", "page", "fields"];
+    excludeFields.forEach((element) => delete queries[element]);
+
+    // $gt: >
+    // $gte: >=
+    // $lt: <
+    // $lte: <=
+
+    // Format lại các operators cho đúng cú pháp của mongodb
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(
+        /\b(gt|gte|lt|lte)\b/g,
+        (matchedElement) => `$${matchedElement}`
+    );
+    const formatedQueries = JSON.parse(queryString);
+
+    // // Filtering (by email)
+    // if (queries?.email)
+    //     formatedQueries.email = { $regex: queries.email, $options: "i" }; // Tìm gần đúng
+    // let queryCommand = User.find(formatedQueries);
+
+    // // Filtering (by firstName)
+    if (queries?.firstName)
+        formatedQueries.firstName = { $regex: queries.firstName, $options: "i" }; // Tìm gần đúng
+    let queryCommand = User.find(formatedQueries);
+
+    // Sorting
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(",").join(" ");
+        queryCommand = queryCommand.sort(sortBy);
+    } else {
+        queryCommand = queryCommand.sort("createdAt");
+    }
+
+    // Fields limiting
+    if (req.query.fields) {
+        const fields = req.query.fields.split(",").join(" ");
+        queryCommand = queryCommand.select(fields);
+    } else {
+        queryCommand = queryCommand.select("-__v");
+    }
+
+    // Pagination
+    // limit: số bài đăng muốn lấy
+    // skip: bỏ qua
+    // page: trang hiện tại
+
+    // Ví dụ: trang 10, mỗi trang 2 bài
+    // page = 10, limit 2 => skip => 18 => trang 10 sẽ có 19 và 20
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+    queryCommand.skip(skip).limit(limit);
+
+    //EXECUTE QUERY
+    const response = await queryCommand;
     return res.status(200).json({
         status: response ? true : false,
-        users: response,
+        counts: response.length,
+        users: response ? response : "Can not get all users",
     });
 });
 
 const getUserById = asyncHandler(async (req, res) => {
     const { uid } = req.params;
     if (!uid) throw new Error("Missing input!");
-    const user = await User.findById(uid).select(
-        "-refreshToken -role -password"
-    );
+    const user = await User.findById(uid).select("-refreshToken -password");
 
     return res.status(200).json({
         status: user ? true : false,
@@ -207,9 +271,8 @@ const updateUser = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
         status: response ? true : false,
-        response: response
-            ? response
-            : "Update user failed! Please try again :<",
+        response: response ? response : "Update user failed! Please try again :<",
+        message: response ? "Updated a user successfully!" : "Update user failed! Please try again :<",
     });
 });
 
@@ -226,7 +289,8 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
         response: response
             ? response
             : "Update user failed! Please try again :<",
-    });
+        message: response ? "Updated a user successfully!" : "Update user failed! Please try again :<",
+        });
 });
 
 const uploadAvatarUser = asyncHandler(async (req, res) => {

@@ -19,3 +19,29 @@ export const apiGetCurrent = () =>
         url: "/user/current",
         method: "GET",
     });
+
+export const apiGetUsers = (params) =>
+    instance({
+        url: "/user/",
+        method: "GET",
+        params,
+    });
+
+    export const apiGetUserById = (uid) =>
+    instance({
+        url: "/user/" + uid,
+        method: "GET",
+    });
+
+    export const apiUpdateUser = (data, uid) =>
+    instance({
+        url: "/user/" + uid,
+        method: "PUT",
+        data,
+    });
+
+    export const apiDeleteUser = (uid) =>
+    instance({
+        url: "/user/" + uid,
+        method: "DELETE",
+    });

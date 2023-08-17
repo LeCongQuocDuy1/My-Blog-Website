@@ -10,7 +10,6 @@ const Home = () => {
     const { categories } = useSelector((state) => state.app);
     const { posts, isLoading } = useSelector((state) => state.post);
     const [postsLimit, setPostsLimit] = useState(null);
-    const { current } = useSelector((state) => state.user);
 
     useEffect(() => {
         window.scrollTo(0, 0);

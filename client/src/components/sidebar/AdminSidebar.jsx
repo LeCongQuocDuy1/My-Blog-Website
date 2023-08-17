@@ -1,8 +1,7 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import paths from "../../ultils/paths";
 import { Link, NavLink } from "react-router-dom";
 import icons from "../../ultils/icons";
-// import { adminSidebar } from "../../ultils/constant";
 
 const AdminSidebar = () => {
     const [actived, setActived] = useState([]);
@@ -16,7 +15,7 @@ const AdminSidebar = () => {
     };
 
     return (
-        <div className="">
+        <div className="fixed left-0 w-[16.7%]">
             <Link
                 to={`/${paths.HOME}`}
                 className="py-[15px] px-[30px] text-[26px] text-main font-bold text-center w-full block"
@@ -135,7 +134,7 @@ const AdminSidebar = () => {
                     {actived.some((id) => id === 2) && (
                         <div className="flex flex-col">
                             <NavLink
-                                to={`/${paths.ADMIN}/${paths.CREATE_POST}`}
+                                to={`/${paths.ADMIN}/${paths.CREATE_CATEGORY}`}
                                 className={({ isActive }) =>
                                     isActive
                                         ? `flex items-center pl-[40px] px-[15px] py-[10px] bg-[#d3d3d3] hover:bg-[#d3d3d3]`
@@ -183,7 +182,7 @@ const AdminSidebar = () => {
                     {actived.some((id) => id === 3) && (
                         <div className="flex flex-col">
                             <NavLink
-                                to={`/${paths.ADMIN}/${paths.CREATE_POST}`}
+                                to={`/${paths.ADMIN}/${paths.CREATE_USER}`}
                                 className={({ isActive }) =>
                                     isActive
                                         ? `flex items-center pl-[40px] px-[15px] py-[10px] bg-[#d3d3d3] hover:bg-[#d3d3d3]`
