@@ -15,7 +15,7 @@ const AdminLayout = () => {
             <div className="h-screen w-full relative">
                 <AdminSidebar />
             </div>
-            <div className="col-span-4 bg-[#d3d3d38d]">
+            <div className="col-span-4 bg-[#3498db5b]">
                 <Outlet />
             </div>
         </div>

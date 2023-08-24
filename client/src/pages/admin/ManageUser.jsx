@@ -121,7 +121,7 @@ const ManageUser = () => {
                                         }} id="email" errors={errors} /> : <span>{item.email}</span>}
                                     </td>
                                     <td className="px-4 py-2">
-                                    {user?._id === item._id ? <Select register={register} errors={errors} defaultValue={roles.find(role => +role.value === +item.role)?.value} id="role" validate={{required: true}} options={roles} /> : <span>{roles.find(role => +role.value === +item.role)?.value}</span>}
+                                    {user?._id === item._id ? <Select register={register} errors={errors} defaultValue={roles.find(role => role.value === +item.role)?.value} id="role" validate={{required: true}} options={roles} /> : <span>{roles.find(role => role.value === item.role)?.value}</span>}
                                     </td>
                                     <td className="px-4 py-2">
                                     {user?._id === item._id ? <InputForm type="text" defaultValue={user?.avatar} register={register} validate={{required: true}} id="avatar" errors={errors} /> : <img src={item.avatar} width={100} height={100} />}

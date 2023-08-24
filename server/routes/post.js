@@ -6,9 +6,8 @@ const {
     verifyAdmin,
 } = require("../middlewares/verifyToken");
 
-router.post("/", [verifyAccessToken], controllers.createPost);
+router.post("/", [verifyAccessToken], uploadCloudPost.single("image"), controllers.createPost);
 router.get("/", controllers.getPosts);
-
 router.put(
     "/upload/:pid",
     [verifyAccessToken],

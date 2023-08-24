@@ -1,42 +1,59 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.quill-theme {
+  margin: 10px 0;
+  background-color: #fff;
+  color: #333333;
+  font-family: "Noto Serif","Regular","Times New Roman", serif;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 10px 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.quill-theme .ql-toolbar {
+  border-bottom: 1px solid #cccccc;
+  background-color: #f3f3f3;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.quill-theme .ql-container {
+  border: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.quill-theme .ql-editor {
+  padding: 10px;
+  min-height: 200px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.card {
-  padding: 2em;
+.quill-theme .ql-editor p {
+  margin-bottom: 10px;
+  font-size: 20px;
 }
 
-.read-the-docs {
-  color: #888;
+.quill-theme .ql-editor h1 {
+  font-size: 24px;
+  font-weight: bold;
+  font-size: 42px;
+  line-height: 58px;
 }
+
+.quill-theme .ql-editor img {
+  object-fit: cover;
+}
+
+.quill-theme .ql-editor blockquote {
+  border-left: 3px solid rgb(0, 204, 255);
+  padding: 10px;
+  font-size: 19px;
+}
+
+.quill-theme .ql-editor blockquote:hover {
+  background-color: rgba(102, 197, 232, 0.381);
+}
+
+
+
+
+
+

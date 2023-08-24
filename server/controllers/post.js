@@ -3,10 +3,9 @@ const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 
 const createPost = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) throw new Error("Missing input");
-
-    // Kiểm tra có tiêu đề ko và tạo slug
-    if (req.body && req.body.title) req.body.slug = slugify(req.body.title);
+    const {title, content, description, image, user, category} = req.body;
+    req.body.slug = slugify(title);
+    
     const newPost = await Post.create(req.body);
     return res.status(200).json({
         status: newPost ? true : false,

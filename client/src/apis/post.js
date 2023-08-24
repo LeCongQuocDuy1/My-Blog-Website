@@ -1,5 +1,12 @@
 import instance from "../axios";
 
+export const apiCreatePost = (data) =>
+    instance({
+        url: "/post/",
+        method: "POST",
+        data,
+    });
+
 export const apiGetPosts = (params) =>
     instance({
         url: "/post",
@@ -17,4 +24,10 @@ export const apiGetPostByCategory = (cid) =>
     instance({
         url: "/post/" + cid,
         method: "GET",
+    });
+
+    export const apiUploadImagePost = (pid) =>
+    instance({
+        url: "/post/upload/" + pid,
+        method: "PUT",
     });

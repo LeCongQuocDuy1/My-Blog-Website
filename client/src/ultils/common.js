@@ -39,31 +39,15 @@ export const formatDateTimeAgo = (datetime) => {
     }
 };
 
-// const moment = require('moment');
-
-// const datetime = '2023-08-10T14:40:56.639Z';
-// const now = moment();
-// const pastDatetime = moment(datetime);
-
-// const duration = moment.duration(now.diff(pastDatetime));
-// const seconds = duration.asSeconds();
-// const minutes = duration.asMinutes();
-// const hours = duration.asHours();
-
-// if (seconds < 60) {
-//   const secondsAgo = Math.round(seconds);
-//   const output = `${secondsAgo} giây trước`;
-//   console.log(output);
-// } else if (minutes < 60) {
-//   const minutesAgo = Math.round(minutes);
-//   const output = `${minutesAgo} phút trước`;
-//   console.log(output);
-// } else if (hours < 24) {
-//   const hoursAgo = Math.round(hours);
-//   const output = `${hoursAgo} giờ trước`;
-//   console.log(output);
-// } else {
-//   const formattedDatetime = pastDatetime.format('D [Th]M');
-//   const output = formattedDatetime;
-//   console.log(output);
-// }
+export const getBase64 = (file) => {
+    if(!file) return "";
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (evt) => {
+            const base64 = evt.target.result;
+            resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+    })
+}

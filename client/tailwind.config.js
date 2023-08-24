@@ -14,6 +14,9 @@ export default {
                 main: "#3398d4",
                 error: "#e60023",
             },
+            fontSize: {
+                error: "16px",
+            }
         },
         fontFamily: {
             content: ["Noto Serif", "Regular", "Times New Roman"],
