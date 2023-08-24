@@ -4,8 +4,8 @@ const slugify = require("slugify");
 
 const createPost = asyncHandler(async (req, res) => {
     const {title, content, description, image, user, category} = req.body;
+    if(!(title && content && description && user && category)) throw new Error("Missing input");
     req.body.slug = slugify(title);
-    
     const newPost = await Post.create(req.body);
     return res.status(200).json({
         status: newPost ? true : false,

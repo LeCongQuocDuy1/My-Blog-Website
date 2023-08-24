@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiGetPostById } from "../../apis";
 import { formatDateTimeAgo } from "../../ultils/common";
+import DOMPurify from 'dompurify';
+
 const Detail = () => {
     const { pid } = useParams();
     const [post, setPost] = useState(null);
@@ -53,7 +55,7 @@ const Detail = () => {
                 className="w-full h-full object-contain mb-[10px]"
             />
             <div className="text-[21px] text-[#000] leading-[1.6] my-[30px] font-content">
-                {post?.content || ""}
+                {<div className="text-[21px] text-[#000] leading-[1.6] my-[30px] font-content text-justify" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(post?.content)}}></div> || ""}
             </div>
         </div>
     );
