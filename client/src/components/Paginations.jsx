@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pagination } from "antd";
 import { apiGetPosts } from "../apis/post";
 
-const Paginations = ({ posts, setPostsLimit }) => {
+const Paginations = ({ posts, setPostsLimit, isUpdate }) => {
     const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
         const fetchPostsLimit = async (params) => {
@@ -13,7 +13,7 @@ const Paginations = ({ posts, setPostsLimit }) => {
             page: currentPage,
             limit: 5,
         });
-    }, [currentPage]);
+    }, [currentPage, isUpdate]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);

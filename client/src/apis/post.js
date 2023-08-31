@@ -26,8 +26,20 @@ export const apiGetPostByCategory = (cid) =>
         method: "GET",
     });
 
-    export const apiUploadImagePost = (pid) =>
+export const apiUploadImagePost = (pid) =>
     instance({
         url: "/post/upload/" + pid,
         method: "PUT",
+    });
+
+export const apiDeletePost = (pid) =>
+    instance({
+        url: "/post/" + pid,
+        method: "DELETE",
+    });
+export const apiUpdatePost = (pid, data) =>
+    instance({
+        url: "/post/" + pid,
+        method: "PUT",
+        data: data,
     });

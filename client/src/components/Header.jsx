@@ -45,7 +45,7 @@ const Header = () => {
                             <img
                                 src={current?.avatar}
                                 alt="Avatar"
-                                className="w-[48px] h-[48px] rounded-full object-cover"
+                                className="w-[48px] h-[48px] rounded-full object-cover mr-[10px]"
                             />
                             <p className="text-[18px] font-[600]">{`${current?.firstName} ${current?.lastName}`}</p>
                             <button
