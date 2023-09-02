@@ -1,20 +1,20 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import InputForm from '../../components/InputForm';
+import InputForm from '../../../components/InputForm';
 import {useForm} from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-quill/dist/quill.snow.css';
-import '../../App.css'
-import Select from "../../components/Select";
-import ContentEditor from "../../components/ContentEditor";
-import validate from '../../ultils/validate'
-import { getBase64 } from "../../ultils/common";
-import icons from '../../ultils/icons';
-import { apiUpdatePost } from "../../apis/post";
+import '../../../App.css'
+import Select from "../../../components/Select";
+import ContentEditor from "../../../components/ContentEditor";
+import validate from '../../../ultils/validate'
+import { getBase64 } from "../../../ultils/common";
+import icons from '../../../ultils/icons';
+import { apiUpdatePost } from "../../../apis/post";
 import Swal from "sweetalert2";
 
-const UpdatePost = ({editProduct, render, setEditProduct}) => {
+const UpdatePost = ({editPost, render, setEditPost}) => {
     const {categories} = useSelector(state => state.app);
     const {register, handleSubmit, formState: {errors}, watch, reset} = useForm();
     const [payload, setPayload] = useState({
@@ -42,10 +42,10 @@ const UpdatePost = ({editProduct, render, setEditProduct}) => {
         const invalids = validate({content: payload.content}, setInvalidFields);
 
         if (invalids === 0) {
-            const finalDatas = {...data, ...payload, user: editProduct.user._id};
+            const finalDatas = {...data, ...payload, user: editPost.user._id};
             console.log(finalDatas);
-            if(editProduct?._id && finalDatas) {
-                const response = await apiUpdatePost(editProduct?._id, finalDatas);
+            if(editPost?._id && finalDatas) {
+                const response = await apiUpdatePost(editPost?._id, finalDatas);
                 if(response.status) {
                     Swal.fire(
                         'Successfully!',
@@ -62,7 +62,7 @@ const UpdatePost = ({editProduct, render, setEditProduct}) => {
                         }
                     })
                 } else {
-                    toast.error("Create a post failed!", {position: "top-center",});
+                    toast.error("Update a post failed!", {position: "top-center",});
                 }
             }
         }
@@ -70,11 +70,11 @@ const UpdatePost = ({editProduct, render, setEditProduct}) => {
 
     useEffect(() => {
         reset({
-            title: editProduct?.title || "",
-            description: editProduct?.description || "",
+            title: editPost?.title || "",
+            description: editPost?.description || "",
         });
-        setPayload(prev => ({...prev, content: editProduct?.content}))
-    }, [editProduct])
+        setPayload(prev => ({...prev, content: editPost?.content}))
+    }, [editPost])
 
 return (
     <div className="w-full">
@@ -125,7 +125,7 @@ return (
                             validate={({
                                 required: "categories is required!",
                             })}
-                            active={editProduct?.category?._id}
+                            active={editPost?.category?._id}
                             options={categories?.map(el => ({code: el._id, value: el.title}))}
                         />
                     </div>
@@ -135,7 +135,7 @@ return (
                             type="text"
                             id="user"
                             disabled={true}
-                            defaultValue={`${editProduct?.user?.firstName} ${editProduct?.user?.lastName}`}
+                            defaultValue={`${editPost?.user?.firstName} ${editPost?.user?.lastName}`}
                             placeholder="User create of new post..." 
                             className="outline-none border-[1px] w-full border-[#d3d3d3] py-[5px] px-[10px] text-[16px] text-[#000] mb-[5px]"
                         />
@@ -156,15 +156,15 @@ return (
                                     hidden={true}
                                 />
                             </label>
-                        {editProduct?.image && (
+                        {editPost?.image && (
                             <div className='my-[10px] w-[240px] h-[140px]'>
-                                <img src={!payload?.image ? editProduct?.image : payload?.image} alt="Image post" className="w-full h-full object-cover" />
+                                <img src={!payload?.image ? editPost?.image : payload?.image} alt="Image post" className="w-full h-full object-cover" />
                             </div>
                         )}
                     </div>
                     <div className="flex items-center gap-4">
                         <button type="submit" className="bg-green-400 text-white w-[200px] text-[26px] px-3 py-2 rounded-md hover:bg-green-500 mb-[10px]">Update</button>
-                        <button type="button" onClick={() => setEditProduct(null)} className="bg-red-400 text-white w-[200px] text-[26px] px-3 py-2 rounded-md hover:bg-red-500 mb-[10px]">Back</button>
+                        <button type="button" onClick={() => setEditPost(null)} className="bg-red-400 text-white w-[200px] text-[26px] px-3 py-2 rounded-md hover:bg-red-500 mb-[10px]">Back</button>
                     </div>
                 </form>
         </div>

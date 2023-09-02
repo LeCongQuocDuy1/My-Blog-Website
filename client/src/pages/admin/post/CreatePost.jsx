@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {useSelector} from "react-redux";
-import InputForm from '../../components/InputForm';
+import InputForm from '../../../components/InputForm';
 import {useForm} from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-quill/dist/quill.snow.css';
-import '../../App.css'
-import Select from "../../components/Select";
-import ContentEditor from "../../components/ContentEditor";
-import validate from '../../ultils/validate'
-import { getBase64 } from "../../ultils/common";
-import icons from '../../ultils/icons';
-import { apiCreatePost } from "../../apis/post";
+import '../../../App.css'
+import Select from "../../../components/Select";
+import ContentEditor from "../../../components/ContentEditor";
+import validate from '../../../ultils/validate'
+import { getBase64 } from "../../../ultils/common";
+import icons from '../../../ultils/icons';
+import { apiCreatePost } from "../../../apis/post";
 
 const CreatePost = () => {
     const {categories} = useSelector(state => state.app);

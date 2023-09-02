@@ -44,8 +44,9 @@ const Home = () => {
                                 </React.Fragment>
                             ))}
                         <Paginations
+                            type="posts"
                             posts={posts}
-                            setPostsLimit={setPostsLimit}
+                            setLimits={setPostsLimit}
                         />
                     </div>
                     <div className="">

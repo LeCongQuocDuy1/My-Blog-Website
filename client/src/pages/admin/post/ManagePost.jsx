@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import InputForm from "../../components/InputForm";
+import React, { useCallback, useState } from "react";
 import {useForm} from 'react-hook-form';
 import { useSelector } from "react-redux";
-import {apiDeletePost, apiGetPosts} from '../../apis/post';
-import Paginations from '../../components/Paginations';
+import {apiDeletePost, apiGetPosts} from '../../../apis/post';
+import Paginations from '../../../components/Paginations';
 import UpdatePost from "./UpdatePost";
 import Swal from 'sweetalert2';
 
@@ -11,7 +10,7 @@ const ManagePost = () => {
     const {register, formState: {errors}, handleSubmit, reset } = useForm();
     const { posts } = useSelector((state) => state.post);
     const [postsLimit, setPostsLimit] = useState(null);
-    const [editProduct, setEditProduct] = useState(null);
+    const [editPost, setEditPost] = useState(null);
     const [isUpdate, setIsUpdate] = useState(false);
     const [searchValue, setSearchValue] = useState("");
 
@@ -41,7 +40,6 @@ const ManagePost = () => {
             }).then( async (result) => {
                 if (result.isConfirmed) {
                     const response = await apiDeletePost(id);
-                    console.log(response);
                     if(response.status) {
                         Swal.fire(
                             'Deleted!',
@@ -56,8 +54,8 @@ const ManagePost = () => {
 
     return (
         <div className="w-full relative">
-            {editProduct && (<div className="absolute inset-0 p-[20px] h-[1500px] bg-[#b7daf2] z-50">
-                <UpdatePost editProduct={editProduct} setEditProduct={setEditProduct} render={render} />
+            {editPost && (<div className="absolute inset-0 p-[20px] h-[1500px] bg-[#b7daf2] z-50">
+                <UpdatePost editPost={editPost} setEditPost={setEditPost} render={render} />
             </div>)}
 
             <div className="p-[20px]">
@@ -95,7 +93,7 @@ const ManagePost = () => {
                                 <td className="px-4 py-2">{`${item.user?.firstName} ${item.user?.lastName}`}</td>
                                 <td className="px-4 py-2">
                                     <span
-                                        onClick={() => setEditProduct(item)}
+                                        onClick={() => setEditPost(item)}
                                         className="p-2 bg-blue-400 text-white cursor-pointer rounded-md text-[16px] mr-[5px]"
                                     >
                                         Edit
@@ -112,7 +110,7 @@ const ManagePost = () => {
                     </tbody>
                 </table>
                 <div className="w-full flex items-center justify-end my-8">
-                    <Paginations posts={posts} setPostsLimit={setPostsLimit} searchValue={searchValue} setSearchValue={setSearchValue} isUpdate={isUpdate} />
+                    <Paginations type="posts" posts={posts} setLimits={setPostsLimit} searchValue={searchValue} setSearchValue={setSearchValue} isUpdate={isUpdate} />
                 </div>
             </div>
         </div>
