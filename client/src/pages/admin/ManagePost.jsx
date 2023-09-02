@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import InputForm from "../../components/InputForm";
 import {useForm} from 'react-hook-form';
 import { useSelector } from "react-redux";
-import {apiDeletePost} from '../../apis/post';
+import {apiDeletePost, apiGetPosts} from '../../apis/post';
 import Paginations from '../../components/Paginations';
 import UpdatePost from "./UpdatePost";
 import Swal from 'sweetalert2';
@@ -10,17 +10,23 @@ import Swal from 'sweetalert2';
 const ManagePost = () => {
     const {register, formState: {errors}, handleSubmit, reset } = useForm();
     const { posts } = useSelector((state) => state.post);
-    const { categories } = useSelector((state) => state.app);
     const [postsLimit, setPostsLimit] = useState(null);
     const [editProduct, setEditProduct] = useState(null);
     const [isUpdate, setIsUpdate] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
     const render = useCallback(() => {
         setIsUpdate(!isUpdate);
     })
 
-    const handleSearch = () => {
-
+    const handleSearch = async () => {
+        if(searchValue !== "") {
+            const response = await apiGetPosts({title: searchValue});
+            if (response.status) setPostsLimit(response.posts);
+        } else {
+            const response = await apiGetPosts();
+            if (response.status) setPostsLimit(response.posts);
+        }
     }
 
     const handleDelete = (id) => {
@@ -60,13 +66,14 @@ const ManagePost = () => {
                 </div>
                 <div className="mb-[25px] w-full">
                     <form onSubmit={handleSubmit(handleSearch)} className="flex items-center justify-end gap-3">
-                        <InputForm
-                            id="q"
-                            register={register}
-                            errors={errors}
-                            placeholderText={`Search post by title, desc `}
+                        <input 
+                            type="text"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            className="inline-block outline-none border-[1px] w-[300px] border-[#d3d3d3] py-[5px] px-[10px] text-[16px] text-[#000] mb-[5px]"
+                            placeholder="Search post by title"
                         />
-                        <button className="px-[10px] mb-[5px] py-[5px] bg-green-400 text-white cursor-pointer rounded-md text-[16px]">Search</button>
+                        <button onClick={handleSearch} className="px-[10px] mb-[5px] py-[5px] bg-green-400 text-white cursor-pointer rounded-md text-[16px]">Search</button>
                     </form>
                 </div>
                 <table className="w-full">
@@ -105,7 +112,7 @@ const ManagePost = () => {
                     </tbody>
                 </table>
                 <div className="w-full flex items-center justify-end my-8">
-                    <Paginations posts={posts} setPostsLimit={setPostsLimit} isUpdate={isUpdate} />
+                    <Paginations posts={posts} setPostsLimit={setPostsLimit} searchValue={searchValue} setSearchValue={setSearchValue} isUpdate={isUpdate} />
                 </div>
             </div>
         </div>

@@ -32,14 +32,12 @@ const getPosts = asyncHandler(async (req, res) => {
         (matchedElement) => `$${matchedElement}`
     );
     const formatedQueries = JSON.parse(queryString);
-
-    // // Filtering (by title)
+    // Filtering (by title)
     if (queries?.title)
-        formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
-    let queryCommand = Post.find(formatedQueries)
-        .populate("category")
-        .populate("user");
+    formatedQueries.title = { $regex: queries.title, $options: "i" }; // Tìm gần đúng
 
+    let queryCommand = Post.find(formatedQueries).populate("category").populate("user");
+    
     // Sorting
     if (req.query.sort) {
         const sortBy = req.query.sort.split(",").join(" ");

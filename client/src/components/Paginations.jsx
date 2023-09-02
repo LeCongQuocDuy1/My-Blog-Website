@@ -4,21 +4,23 @@ import { apiGetPosts } from "../apis/post";
 
 const Paginations = ({ posts, setPostsLimit, isUpdate }) => {
     const [currentPage, setCurrentPage] = useState(1);
+
+    const fetchPostsLimit = async (params) => {
+        const response = await apiGetPosts(params);
+        if (response.status) setPostsLimit(response.posts);
+    };
+
     useEffect(() => {
-        const fetchPostsLimit = async (params) => {
-            const response = await apiGetPosts(params);
-            if (response.status) setPostsLimit(response.posts);
-        };
         fetchPostsLimit({
             page: currentPage,
             limit: 5,
         });
+
     }, [currentPage, isUpdate]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
         window.scrollTo(0, 0);
-        // Thực hiện các thao tác khi trang thay đổi, ví dụ: gọi API để lấy dữ liệu trang mới
     };
 
     return (
