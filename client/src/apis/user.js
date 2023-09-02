@@ -33,7 +33,7 @@ export const apiGetUsers = (params) =>
         method: "GET",
     });
 
-    export const apiUpdateUser = (data, uid) =>
+    export const apiUpdateUser = (uid, data) =>
     instance({
         url: "/user/" + uid,
         method: "PUT",

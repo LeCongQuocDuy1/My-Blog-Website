@@ -99,6 +99,7 @@ const CreatePost = () => {
                         label="Category Post"
                         id={'category'}
                         errors={errors}
+                        type="user"
                         register={register}
                         validate={({
                             required: "categories is required!",
