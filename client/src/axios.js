@@ -2,7 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
     // baseURL: import.meta.env.REACT_APP_API_URI,
-    baseURL: "https://my-blog-website-f4un.onrender.com/api/v1/",
+    baseURL: "http://localhost:5000/api/v1/",
 });
 
 // Add a request interceptor
