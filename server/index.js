@@ -31,6 +31,10 @@ app.use(express.json({ limit: "200mb" }));
 dbConnect();
 initRoutes(app);
 
+app.get("/", (req, res) => {
+    res.json("Hello world!");
+})
+
 app.listen(port, () => {
     console.log("Server running on the port " + port);
 });
