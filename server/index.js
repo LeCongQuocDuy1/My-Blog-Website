@@ -23,13 +23,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(cors(
-    {
-        origin: ["https://my-blog-website-brown.vercel.app/"],
-        methods: ["GET", "POST"],
-        credentials: true
-    }
-));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: "200mb" }));
