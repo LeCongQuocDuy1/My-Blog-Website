@@ -17,8 +17,7 @@ const port = process.env.PORT || 6969;
 // );
 
 const corsOptions = {
-    // origin: "*",
-    origin: ["https://my-blog-website-brown.vercel.app/"],
+    origin: "*",
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
 };
@@ -30,10 +29,6 @@ app.use(express.json({ limit: "200mb" }));
 
 dbConnect();
 initRoutes(app);
-
-app.get("/", (req, res) => {
-    res.json("Hello world!");
-})
 
 app.listen(port, () => {
     console.log("Server running on the port " + port);
