@@ -17,7 +17,8 @@ const port = process.env.PORT || 6969;
 // );
 
 const corsOptions = {
-    origin: "*",
+    // origin: "*",
+    origin: ["https://my-blog-website-brown.vercel.app/"],
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
 };
